@@ -27,9 +27,7 @@ def get_vectorstore_from_text():
      # document = loader.load()
      text_splitter = RecursiveCharacterTextSplitter()
      document_chunks = text_splitter.split_documents(document)
-     embeddings = huggingface.HuggingFaceEmbeddings()
-     ids = [str(i) for i in range(1, len(document_chunks) + 1)]
-     vector_store.delete(ids=[ids[-1]])
+     embeddings = OpenAIEmbeddings()
      vector_store = chroma.Chroma.from_documents(document_chunks, embeddings)
      
      return vector_store
