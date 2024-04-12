@@ -12,6 +12,7 @@ from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain.chains import create_history_aware_retriever, create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
 import os
+import sys
 import re
 import ast
 from git import Repo
@@ -160,6 +161,8 @@ def save_repo_analysis(repo_url, output_file="repo_analysis.txt"):
           print(f"Error saving repository analysis: {e}")
 # app config
 def main():
+     __import__('pysqlite3')
+     sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
      st.set_page_config(page_title="Chat", layout='wide')
      st.title("GitHub Bot")
      with st.sidebar:
