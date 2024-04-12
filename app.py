@@ -29,7 +29,7 @@ def get_vectorstore_from_text():
      document_chunks = text_splitter.split_documents(document)
      embeddings = OpenAIEmbeddings()
 
-     # vector_store = chroma.Chroma()
+     vector_store = chroma.Chroma()
      # for x in range(len(vector_store)):
           # vector_store.delete(ids=[x])
      print(vector_store.delete_collection())
