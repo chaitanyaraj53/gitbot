@@ -165,9 +165,9 @@ def save_repo_analysis(repo_url, output_file="repo_analysis.txt"):
           print(f"Error saving repository analysis: {e}")
 # app config
 def main():
-     # st.session_state.clear()
-     # __import__('pysqlite3')
-     # sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+     st.session_state.clear()
+     __import__('pysqlite3')
+     sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
      st.set_page_config(page_title="Chat", layout='wide')
      st.title("GitHub Bot")
      with st.sidebar:
