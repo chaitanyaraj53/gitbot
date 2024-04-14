@@ -22,7 +22,7 @@ from dotenv import load_dotenv
 load_dotenv()
 def get_vectorstore_from_text(repo_name):
      # pythonloader
-     document = TextLoader(f"./{repo_name}_analysis.txt").load()
+     document = TextLoader(f"{repo_name}_analysis.txt").load()
      # document = DirectoryLoader('./sport', glob="**/*.txt").load()
      # loader = WebBaseLoader(url)
      # document = loader.load()
