@@ -34,7 +34,7 @@ def get_vectorstore_from_text():
           # vector_store.delete(ids=[x])
      # print(vector_store.delete_collection())
      st.session_state.vector_store = chroma.Chroma.from_documents(document_chunks, embeddings)
-     return st.session_state.vector_store
+     # return st.session_state.vector_store
 
 def get_context_retriever_chain(vector_store):
      # llm = ChatOpenAI(api_key=os.getenv('OPENAI_API_KEY'))
@@ -200,7 +200,10 @@ def main():
                ]
           if "vector_store" not in st.session_state:
                save_repo_analysis(git_url)
-               st.session_state.vector_store = get_vectorstore_from_text()
+               get_vectorstore_from_text()
+          if 'git_url' not in st.session_state:
+               st.session_state.git_url = git_url
+               st.write(st.session_state)
 
           # user input
           user_query = st.chat_input("Type your message here...")
