@@ -29,12 +29,12 @@ def get_vectorstore_from_text():
      document_chunks = text_splitter.split_documents(document)
      # embeddings = OpenAIEmbeddings()
      embeddings = huggingface.HuggingFaceEmbeddings()
-     vector_store = chroma.Chroma()
+     st.session_state.vector_store = chroma.Chroma()
      # for x in range(len(vector_store)):
           # vector_store.delete(ids=[x])
-     print(vector_store.delete_collection())
-     vector_store = chroma.Chroma.from_documents(document_chunks, embeddings)
-     return vector_store
+     # print(vector_store.delete_collection())
+     st.session_state.vector_store = chroma.Chroma.from_documents(document_chunks, embeddings)
+     return st.session_state.vector_store
 
 def get_context_retriever_chain(vector_store):
      # llm = ChatOpenAI(api_key=os.getenv('OPENAI_API_KEY'))
@@ -200,7 +200,7 @@ def main():
                ]
           if "vector_store" not in st.session_state:
                save_repo_analysis(git_url)
-               st.session_state.vector_store = get_vectorstore_from_text() 
+               st.session_state.vector_store = get_vectorstore_from_text()
 
           # user input
           user_query = st.chat_input("Type your message here...")
