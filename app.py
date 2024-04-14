@@ -59,7 +59,8 @@ def get_conversational_rag_chain(retriever_chain):
      # llm = ChatOpenAI(api_key=os.getenv('OPENAI_API_KEY'))
      llm = huggingface_hub.HuggingFaceHub(
           huggingfacehub_api_token=os.getenv('HF_API_KEY'),
-          task='question-answering'
+          task='text-generation'
+          # repo_id='CohereForAI/c4ai-command-r-plus'
      )
      prompt = ChatPromptTemplate.from_messages([
           ("system", "Answer the user's questions based on the below context:\n\n{context}"),
