@@ -178,6 +178,8 @@ def save_repo_analysis(repo_url, repo_name):
 def extract_repo_name(repo_url):
     parsed_url = urlparse(repo_url)
     repo_name = parsed_url.path.strip("/").split("/")[-1]
+    if repo_name.endswith(".git"):
+        repo_name = repo_name[:-4]  # Remove the .git suffix
     return repo_name
 
 def main():
