@@ -14,14 +14,15 @@ from langchain.chains.combine_documents import create_stuff_documents_chain
 import os
 import sys
 import re
+from urllib.parse import urlparse
 import ast
 from git import Repo
 import streamlit as st
 from dotenv import load_dotenv
 load_dotenv()
-def get_vectorstore_from_text(git_url):
+def get_vectorstore_from_text(repo_name):
      # pythonloader
-     document = TextLoader(f"./{git_url}_analysis.txt").load()
+     document = TextLoader(f"./{repo_name}_analysis.txt").load()
      # document = DirectoryLoader('./sport', glob="**/*.txt").load()
      # loader = WebBaseLoader(url)
      # document = loader.load()
@@ -138,7 +139,7 @@ def analyze_code_files(code_files):
 
      return total_functions, all_function_names
 
-def save_repo_analysis(repo_url):
+def save_repo_analysis(repo_url, repo_name):
      try:
           # Clone the repository
           repo_folder = "temp_repo"
@@ -160,7 +161,7 @@ def save_repo_analysis(repo_url):
           analysis_text += f"Function names: {', '.join(all_function_names)}\n"
 
           # Write analysis text to file
-          output_file = f"{repo_url}_analysis.txt"
+          output_file = f"{repo_name}_analysis.txt"
           with open(output_file, "w", encoding="utf-8") as f:
                f.write(analysis_text)
 
@@ -174,6 +175,11 @@ def save_repo_analysis(repo_url):
      except Exception as e:
           print(f"Error saving repository analysis: {e}")
 # app config
+def extract_repo_name(repo_url):
+    parsed_url = urlparse(repo_url)
+    repo_name = parsed_url.path.strip("/").split("/")[-1]
+    return repo_name
+
 def main():
      # st.session_state.clear(
      __import__('pysqlite3')
@@ -200,8 +206,9 @@ def main():
                     AIMessage(content="Ask me about the repository..."),
                ]
           if "vector_store" not in st.session_state:
-               save_repo_analysis(git_url)
-               get_vectorstore_from_text(git_url)
+               repo_name = extract_repo_name(git_url)
+               save_repo_analysis(git_url, repo_name)
+               get_vectorstore_from_text(repo_name)
           if 'git_url' not in st.session_state:
                st.session_state.git_url = git_url
                st.write(st.session_state)
