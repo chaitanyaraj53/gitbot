@@ -27,8 +27,8 @@ def get_vectorstore_from_text():
      # document = loader.load()
      text_splitter = RecursiveCharacterTextSplitter()
      document_chunks = text_splitter.split_documents(document)
-     embeddings = OpenAIEmbeddings()
-
+     # embeddings = OpenAIEmbeddings()
+     embeddings = huggingface.HuggingFaceEmbeddings()
      vector_store = chroma.Chroma()
      # for x in range(len(vector_store)):
           # vector_store.delete(ids=[x])
@@ -37,7 +37,8 @@ def get_vectorstore_from_text():
      return vector_store
 
 def get_context_retriever_chain(vector_store):
-     llm = ChatOpenAI(api_key=os.getenv('OPENAI_API_KEY'))
+     # llm = ChatOpenAI(api_key=os.getenv('OPENAI_API_KEY'))
+     llm = huggingface_hub.HuggingFaceHub(huggingfacehub_api_token=os.getenv('HF_API_KEY'))
      retriever = vector_store.as_retriever()
      
      prompt = ChatPromptTemplate.from_messages([
@@ -51,8 +52,8 @@ def get_context_retriever_chain(vector_store):
 
 def get_conversational_rag_chain(retriever_chain): 
     
-     llm = ChatOpenAI(api_key=os.getenv('OPENAI_API_KEY'))
-
+     # llm = ChatOpenAI(api_key=os.getenv('OPENAI_API_KEY'))
+     llm = huggingface_hub.HuggingFaceHub(huggingfacehub_api_token=os.getenv('HF_API_KEY'))
      prompt = ChatPromptTemplate.from_messages([
           ("system", "Answer the user's questions based on the below context:\n\n{context}"),
           MessagesPlaceholder(variable_name="chat_history"),
