@@ -40,7 +40,8 @@ def get_context_retriever_chain(vector_store):
      # llm = ChatOpenAI(api_key=os.getenv('OPENAI_API_KEY'))
      llm = huggingface_hub.HuggingFaceHub(
           huggingfacehub_api_token=os.getenv('HF_API_KEY'),
-          task='question-answering'
+          task='text-generation'
+          # repo_id='CohereForAI/c4ai-command-r-plus'
      )
      retriever = vector_store.as_retriever()
      
