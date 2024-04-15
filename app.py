@@ -22,10 +22,10 @@ from dotenv import load_dotenv
 load_dotenv()
 def get_vectorstore_from_text(repo_name):
      file = f"./repo_text/{repo_name}_analysis.txt"
-     document = TextLoader(file).load()
-     # document = DirectoryLoader(f"./{repo_name}/cloned_repo", glob="**/*.txt", loader_cls=TextLoader).load()
+     # document = TextLoader(file).load()
+     document = DirectoryLoader("./repo_text", glob=f"{repo_name}_analysis.txt", loader_cls=TextLoader).load()
      # document = DirectoryLoader(f"./{repo_name}/cloned_repo", glob="**/*.py", loader_cls=PythonLoader).load()
-     os.remove(f"./{repo_name}_analysis.txt")
+     os.remove(f"./repo_text/{repo_name}_analysis.txt")
      # loader = WebBaseLoader(url)
      # document = loader.load()
      text_splitter = RecursiveCharacterTextSplitter()
