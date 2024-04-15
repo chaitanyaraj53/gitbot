@@ -19,7 +19,6 @@ import ast
 from git import Repo
 import streamlit as st
 from dotenv import load_dotenv
-load_dotenv()
 def get_vectorstore_from_text(repo_name):
      file = f"./{repo_name}_analysis.txt"
      document = TextLoader(file).load()
@@ -30,7 +29,7 @@ def get_vectorstore_from_text(repo_name):
      # document = loader.load()
      text_splitter = RecursiveCharacterTextSplitter()
      document_chunks = text_splitter.split_documents(document)
-     embeddings = OpenAIEmbeddings(api_key=os.getenv('OPENAI_API_KEY'))
+     embeddings = OpenAIEmbeddings()
      # embeddings = huggingface.HuggingFaceEmbeddings()
      st.session_state.vector_store = chroma.Chroma()
      # for x in range(len(vector_store)):
@@ -40,7 +39,7 @@ def get_vectorstore_from_text(repo_name):
      # return st.session_state.vector_store
 
 def get_context_retriever_chain(vector_store):
-     llm = ChatOpenAI(api_key=os.getenv('OPENAI_API_KEY'))
+     llm = ChatOpenAI()
      # llm = huggingface_hub.HuggingFaceHub(
           # huggingfacehub_api_token=os.getenv('HF_API_KEY'),
           # task='text-generation'
@@ -59,7 +58,7 @@ def get_context_retriever_chain(vector_store):
 
 def get_conversational_rag_chain(retriever_chain): 
     
-     llm = ChatOpenAI(api_key=os.getenv('OPENAI_API_KEY'))
+     llm = ChatOpenAI()
      # llm = huggingface_hub.HuggingFaceHub(
           # huggingfacehub_api_token=os.getenv('HF_API_KEY'),
           # task='text-generation'
@@ -186,6 +185,8 @@ def extract_repo_name(repo_url):
     return repo_name
 # app config
 def main():
+     load_dotenv()
+
      # st.session_state.clear(
      __import__('pysqlite3')
      sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
@@ -210,7 +211,7 @@ def main():
 
           if 'git_url' not in st.session_state:
                st.session_state.git_url = git_url
-               st.write(st.session_state)
+               # st.write(st.session_state)
           
           # user input
           user_query = st.chat_input("Type your message here...")
