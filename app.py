@@ -40,12 +40,12 @@ def get_vectorstore_from_text():
      # return st.session_state.vector_store
 
 def get_context_retriever_chain(vector_store):
-     llm = ChatOpenAI(api_key=os.getenv('OPENAI_API_KEY'))
-     # llm = huggingface_hub.HuggingFaceHub(
-          # huggingfacehub_api_token=os.getenv('HF_API_KEY'),
-          # task='text-generation'
+     # llm = ChatOpenAI(api_key=os.getenv('OPENAI_API_KEY'))
+     llm = huggingface_hub.HuggingFaceHub(
+          huggingfacehub_api_token=os.getenv('HF_API_KEY'),
+          task='text-generation'
           # repo_id='CohereForAI/c4ai-command-r-plus'
-     # )
+     )
      retriever = vector_store.as_retriever()
      
      prompt = ChatPromptTemplate.from_messages([
@@ -59,12 +59,12 @@ def get_context_retriever_chain(vector_store):
 
 def get_conversational_rag_chain(retriever_chain): 
     
-     llm = ChatOpenAI(api_key=os.getenv('OPENAI_API_KEY'))
-     # llm = huggingface_hub.HuggingFaceHub(
-          # huggingfacehub_api_token=os.getenv('HF_API_KEY'),
-          # task='text-generation'
+     # llm = ChatOpenAI(api_key=os.getenv('OPENAI_API_KEY'))
+     llm = huggingface_hub.HuggingFaceHub(
+          huggingfacehub_api_token=os.getenv('HF_API_KEY'),
+          task='text-generation'
           # repo_id='CohereForAI/c4ai-command-r-plus'
-     # )
+     )
      prompt = ChatPromptTemplate.from_messages([
           ("system", "Answer the user's questions based on the below context:\n\n{context}"),
           MessagesPlaceholder(variable_name="chat_history"),
