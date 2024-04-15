@@ -204,7 +204,7 @@ def main():
           if "vector_store" not in st.session_state:
                repo_name = extract_repo_name(git_url)
                save_repo_analysis(git_url)
-               get_vectorstore_from_text(repo_name)
+               get_vectorstore_from_text()
 
           if 'git_url' not in st.session_state:
                st.session_state.git_url = git_url
