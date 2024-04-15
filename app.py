@@ -140,7 +140,7 @@ def analyze_code_files(code_files):
           all_function_names.extend(function_names)
 
      return total_functions, all_function_names
-
+# @st.cache
 def save_repo_analysis(repo_url, output_file="repo_analysis.txt"):
      try:
           # Clone the repository
@@ -164,6 +164,7 @@ def save_repo_analysis(repo_url, output_file="repo_analysis.txt"):
 
           # Write analysis text to file
           with open(output_file, "w", encoding="utf-8") as f:
+               f.truncate()
                f.write(analysis_text)
 
           # Remove temporary repository folder
