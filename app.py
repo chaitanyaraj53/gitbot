@@ -1,5 +1,5 @@
 from langchain_community.embeddings import huggingface
-from langchain_community.document_loaders import TextLoader, DirectoryLoader, PythonLoader
+from langchain_community.document_loaders import TextLoader, DirectoryLoader
 from langchain_community.llms import huggingface_hub
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.documents import Document
@@ -20,12 +20,12 @@ from git import Repo
 import streamlit as st
 from dotenv import load_dotenv
 load_dotenv()
-def get_vectorstore_from_text(repo_name):
-     file = f"./{repo_name}_analysis.txt"
+def get_vectorstore_from_text():
+     file = "./repo_analysis.txt"
      document = TextLoader(file).load()
      # document = DirectoryLoader("./repo_text", glob=f"{repo_name}_analysis.txt", loader_cls=TextLoader).load()
      # document = DirectoryLoader(f"./{repo_name}/cloned_repo", glob="**/*.py", loader_cls=PythonLoader).load()
-     os.remove(f"./repo_text/{repo_name}_analysis.txt")
+     os.remove("./repo_analysis.txt")
      # loader = WebBaseLoader(url)
      # document = loader.load()
      text_splitter = RecursiveCharacterTextSplitter()
@@ -141,7 +141,7 @@ def analyze_code_files(code_files):
 
      return total_functions, all_function_names
 
-def save_repo_analysis(repo_url, repo_name):
+def save_repo_analysis(repo_url, output_file="repo_analysis.txt"):
      try:
           # Clone the repository
           repo_folder = "temp_repo"
@@ -163,7 +163,6 @@ def save_repo_analysis(repo_url, repo_name):
           analysis_text += f"Function names: {', '.join(all_function_names)}\n"
 
           # Write analysis text to file
-          output_file = f"{repo_name}_analysis.txt"
           with open(output_file, "w", encoding="utf-8") as f:
                f.write(analysis_text)
 
@@ -176,7 +175,6 @@ def save_repo_analysis(repo_url, repo_name):
           print(f"Repository analysis saved to '{output_file}'")
      except Exception as e:
           print(f"Error saving repository analysis: {e}")
-# app config
 def extract_repo_name(repo_url):
     parsed_url = urlparse(repo_url)
     repo_name = parsed_url.path.strip("/").split("/")[-1]
@@ -184,13 +182,11 @@ def extract_repo_name(repo_url):
         repo_name = repo_name[:-4]  # Remove the .git suffix
     repo_name = repo_name.replace("-", "_").replace(" ", "_")
     return repo_name
-
-
-
+# app config
 def main():
      # st.session_state.clear(
-     # __import__('pysqlite3')
-     # sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+     __import__('pysqlite3')
+     sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
      st.set_page_config(page_title="Chat", layout='wide')
      st.title("GitHub Bot")
      with st.sidebar:
@@ -201,31 +197,25 @@ def main():
           st.info("Please enter a website URL")
 
      else:
-          # session state
-          # if 'messages' not in st.session_state:
-          #      st.session_state.messages = []
-
-          # for message in st.session_state.messages:
-          #      st.chat_message(message['role']).markdown(message['content'])
           if "chat_history" not in st.session_state:
                st.session_state.chat_history = [
                     AIMessage(content="Ask me about the repository..."),
                ]
           if "vector_store" not in st.session_state:
                repo_name = extract_repo_name(git_url)
-               save_repo_analysis(git_url, repo_name)
+               save_repo_analysis(git_url)
                get_vectorstore_from_text(repo_name)
+
           if 'git_url' not in st.session_state:
                st.session_state.git_url = git_url
                st.write(st.session_state)
-
+          
           # user input
           user_query = st.chat_input("Type your message here...")
           if user_query is not None and user_query != "":
                response = get_response(user_query)
                st.session_state.chat_history.append(HumanMessage(content=user_query))
                st.session_state.chat_history.append(AIMessage(content=response))
-               # st.session_state.messages.append({'role':'user', 'content': user_query})
           
 
           # conversation
