@@ -30,8 +30,8 @@ def get_vectorstore_from_text(repo_name):
      # document = loader.load()
      text_splitter = RecursiveCharacterTextSplitter()
      document_chunks = text_splitter.split_documents(document)
-     # embeddings = OpenAIEmbeddings(api_key=os.getenv('OPENAI_API_KEY'))
-     embeddings = huggingface.HuggingFaceEmbeddings()
+     embeddings = OpenAIEmbeddings(api_key=os.getenv('OPENAI_API_KEY'))
+     # embeddings = huggingface.HuggingFaceEmbeddings()
      st.session_state.vector_store = chroma.Chroma()
      # for x in range(len(vector_store)):
           # vector_store.delete(ids=[x])
