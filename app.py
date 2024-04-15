@@ -164,7 +164,7 @@ def save_repo_analysis(repo_url, output_file="repo_analysis.txt"):
 
           # Write analysis text to file
           with open(output_file, "w", encoding="utf-8") as f:
-               f.truncate()
+               f.write("")
                f.write(analysis_text)
 
           # Remove temporary repository folder
