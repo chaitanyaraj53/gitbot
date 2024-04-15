@@ -21,7 +21,7 @@ import streamlit as st
 from dotenv import load_dotenv
 load_dotenv()
 def get_vectorstore_from_text(repo_name):
-     file = "Push-The-Box_analysis.txt"
+     file = f"./repo_text/{repo_name}_analysis.txt"
      document = TextLoader(file).load()
      # document = DirectoryLoader(f"./{repo_name}/cloned_repo", glob="**/*.txt", loader_cls=TextLoader).load()
      # document = DirectoryLoader(f"./{repo_name}/cloned_repo", glob="**/*.py", loader_cls=PythonLoader).load()
@@ -163,7 +163,7 @@ def save_repo_analysis(repo_url, repo_name):
           analysis_text += f"Function names: {', '.join(all_function_names)}\n"
 
           # Write analysis text to file
-          output_file = f"{repo_name}_analysis.txt"
+          output_file = f"./repo_text/{repo_name}_analysis.txt"
           with open(output_file, "w", encoding="utf-8") as f:
                f.write(analysis_text)
 
