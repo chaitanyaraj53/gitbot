@@ -20,8 +20,8 @@ from git import Repo
 import streamlit as st
 from dotenv import load_dotenv
 load_dotenv()
-def get_vectorstore_from_text():
-     file = "./repo_analysis.txt"
+def get_vectorstore_from_text(repo_name):
+     file = f"./{repo_name}_analysis.txt"
      document = TextLoader(file).load()
      # document = DirectoryLoader("./repo_text", glob=f"{repo_name}_analysis.txt", loader_cls=TextLoader).load()
      # document = DirectoryLoader(f"./{repo_name}/cloned_repo", glob="**/*.py", loader_cls=PythonLoader).load()
@@ -141,7 +141,7 @@ def analyze_code_files(code_files):
 
      return total_functions, all_function_names
 # @st.cache
-def save_repo_analysis(repo_url, output_file="repo_analysis.txt"):
+def save_repo_analysis(repo_url, repo_name):
      try:
           # Clone the repository
           repo_folder = "temp_repo"
@@ -163,6 +163,7 @@ def save_repo_analysis(repo_url, output_file="repo_analysis.txt"):
           analysis_text += f"Function names: {', '.join(all_function_names)}\n"
 
           # Write analysis text to file
+          output_file = f"{repo_name}_analysis.txt"
           with open(output_file, "w", encoding="utf-8") as f:
                f.write("")
                f.write(analysis_text)
@@ -204,8 +205,8 @@ def main():
                ]
           if "vector_store" not in st.session_state:
                repo_name = extract_repo_name(git_url)
-               save_repo_analysis(git_url)
-               get_vectorstore_from_text()
+               save_repo_analysis(git_url, repo_name)
+               get_vectorstore_from_text(repo_name)
 
           if 'git_url' not in st.session_state:
                st.session_state.git_url = git_url
