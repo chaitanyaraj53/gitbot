@@ -1,5 +1,5 @@
 from langchain_community.embeddings import huggingface
-from langchain_community.document_loaders import TextLoader, DirectoryLoader
+from langchain_community.document_loaders import TextLoader, DirectoryLoader, PythonLoader
 from langchain_community.llms import huggingface_hub
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.documents import Document
@@ -23,12 +23,14 @@ load_dotenv()
 def get_vectorstore_from_text(repo_name):
      # pythonloader
      document = TextLoader(f"{repo_name}_analysis.txt").load()
-     # document = DirectoryLoader('./sport', glob="**/*.txt").load()
+     # document = DirectoryLoader(f"./{repo_name}/cloned_repo", glob="**/*.txt", loader_cls=TextLoader).load()
+     # document = DirectoryLoader(f"./{repo_name}/cloned_repo", glob="**/*.py", loader_cls=PythonLoader).load()
+     os.remove(f"./{repo_name}_analysis.txt")
      # loader = WebBaseLoader(url)
      # document = loader.load()
      text_splitter = RecursiveCharacterTextSplitter()
      document_chunks = text_splitter.split_documents(document)
-     # embeddings = OpenAIEmbeddings()
+     # embeddings = OpenAIEmbeddings(api_key=os.getenv('OPENAI_API_KEY'))
      embeddings = huggingface.HuggingFaceEmbeddings()
      st.session_state.vector_store = chroma.Chroma()
      # for x in range(len(vector_store)):
@@ -181,11 +183,58 @@ def extract_repo_name(repo_url):
     if repo_name.endswith(".git"):
         repo_name = repo_name[:-4]  # Remove the .git suffix
     return repo_name
+import shutil
 
+
+
+def clone_and_clean_repo(repo_url):
+    try:
+        # Extract the repository name from the URL
+        repo_name = extract_repo_name(repo_url)
+
+        # Create the destination folder using the repository name
+        destination_folder = repo_name
+        if not os.path.exists(destination_folder):
+            os.makedirs(destination_folder)
+            print(f"Created destination folder: {destination_folder}")
+
+        # Clone the repository
+        cloned_repo_folder = os.path.join(destination_folder, "cloned_repo")
+        Repo.clone_from(repo_url, cloned_repo_folder)
+        print("Repository cloned successfully.")
+
+        # Define the file extensions to keep
+        keep_extensions = [".py", ".md"]
+
+        # Walk through the cloned repository directory structure
+        for root, dirs, files in os.walk(cloned_repo_folder):
+            # Remove the .git directory
+            if ".git" in dirs:
+                git_dir = os.path.join(root, ".git")
+                shutil.rmtree(git_dir)
+                print(f"Removed: {git_dir}")
+                # Remove .git from the list of directories to continue walking
+                dirs.remove(".git")
+            # Remove the .gitignore file
+            if ".gitignore" in files:
+                gitignore_file = os.path.join(root, ".gitignore")
+                os.remove(gitignore_file)
+                print(f"Removed: {gitignore_file}")
+            for file in files:
+                file_path = os.path.join(root, file)
+                # Check if the file extension is not in the list of extensions to keep
+                if os.path.splitext(file_path)[1] not in keep_extensions:
+                    # Remove the file
+                    os.remove(file_path)
+                    print(f"Removed: {file_path}")
+        
+        print("Repository cleaned successfully.")
+    except Exception as e:
+        print(f"Error cloning and cleaning repository: {e}")
 def main():
      # st.session_state.clear(
-     __import__('pysqlite3')
-     sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+     # __import__('pysqlite3')
+     # sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
      st.set_page_config(page_title="Chat", layout='wide')
      st.title("GitHub Bot")
      with st.sidebar:
@@ -202,7 +251,7 @@ def main():
 
           # for message in st.session_state.messages:
           #      st.chat_message(message['role']).markdown(message['content'])
-
+          # clone_and_clean_repo(git_url)
           if "chat_history" not in st.session_state:
                st.session_state.chat_history = [
                     AIMessage(content="Ask me about the repository..."),
