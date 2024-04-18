@@ -136,6 +136,7 @@ def main():
                response = get_response(user_query)
                st.session_state.chat_history.append(HumanMessage(content=user_query))
                st.session_state.chat_history.append(AIMessage(content=response))
+               st.write(st.session_state)
           
 
           # conversation
