@@ -1,23 +1,18 @@
-from langchain_community.embeddings import huggingface
-from langchain_community.document_loaders import TextLoader, DirectoryLoader, GitLoader
-from langchain_community.llms import huggingface_hub
-from langchain_core.output_parsers import StrOutputParser
-from langchain_core.documents import Document
+# from langchain_community.embeddings.huggingface import 
+# from langchain_community.document_loaders import TextLoader, DirectoryLoader
+from langchain_community.document_loaders import GitLoader
+# from langchain_community.llms import huggingface_hub
+# from langchain_core.output_parsers import StrOutputParser
+# from langchain_core.documents import Document
 from langchain_core.messages import AIMessage, HumanMessage
-from langchain_community.document_loaders import WebBaseLoader
-from langchain.text_splitter import RecursiveCharacterTextSplitter, CharacterTextSplitter
-from langchain_community.vectorstores import chroma, faiss
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_community.vectorstores import chroma
 from langchain_openai import OpenAIEmbeddings, ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain.chains import create_history_aware_retriever, create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
 import os
-import sys
-import re
-from urllib.parse import urlparse
-import ast
-import shutil
-from git import Repo
+# from git import Repo
 import streamlit as st
 from dotenv import load_dotenv
 from tempfile import TemporaryDirectory
@@ -51,7 +46,7 @@ def get_vectorstore_from_text(repo_url):
                model='text-embedding-ada-002'
           )
           # embeddings = huggingface.HuggingFaceEmbeddings()
-          st.session_state.vector_store = chroma.Chroma()
+          # st.session_state.vector_store = chroma.Chroma()
           # for x in range(len(vector_store)):
                # vector_store.delete(ids=[x])
           # print(vector_store.delete_collection())
@@ -100,10 +95,10 @@ def get_conversational_rag_chain(retriever_chain):
      return create_retrieval_chain(retriever_chain, stuff_documents_chain)
 
 def get_response(user_input):
-     retriever_chain = get_context_retriever_chain(st.session_state.vector_store)
-     conversation_rag_chain = get_conversational_rag_chain(retriever_chain)
+     st.session_state.retriever_chain = get_context_retriever_chain(st.session_state.vector_store)
+     st.session_state.conversation_rag_chain = get_conversational_rag_chain(st.session_state.retriever_chain)
      
-     response = conversation_rag_chain.invoke({
+     response = st.session_state.conversation_rag_chain.invoke({
           "chat_history": st.session_state.chat_history,
           "input": user_input
      })
