@@ -84,7 +84,7 @@ def get_vectorstore_from_text(repo_url):
           #                except Exception as e:
           #                     pass
 
-          print(len(docs))
+          print(docs)
           text_splitter = RecursiveCharacterTextSplitter(
                     # language=Language.PYTHON,
                       chunk_size=1000, chunk_overlap=50
