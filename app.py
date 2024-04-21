@@ -102,7 +102,7 @@ def get_vectorstore_from_text(repo_url):
           # print(vector_store.delete_collection())
           # if "vector_store" not in st.session_state:
                # st.session_state.vector_store = Chroma.from_documents(document_chunks, embeddings)
-          vector_store = Chroma.from_documents(document_chunks, embeddings)
+          vector_store = FAISS.from_documents(document_chunks, embeddings)
           return vector_store
 
 def get_context_retriever_chain(vector_store):
