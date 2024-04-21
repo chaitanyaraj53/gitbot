@@ -47,16 +47,16 @@ def get_vectorstore_from_text(repo_url):
      temp = f"./{repo_url}"
      try:
           with TemporaryDirectory() as temp:
-               # loader = GitLoader(
-               #      clone_url=repo_url,
-               #      repo_path=temp+"/test_repo",
-               #      branch='master',
-               #      file_filter=lambda file_path: file_path.endswith('.py')
-               # )
+               loader = GitLoader(
+                    clone_url=repo_url,
+                    repo_path=temp+"/test_repo",
+                    branch='master',
+                    file_filter=lambda file_path: file_path.endswith('.py')
+               )
 
-               # document = loader.load()
+               document = loader.load()
 
-               Repo.clone_from(repo_url, to_path=temp+"/test_repo")
+               # Repo.clone_from(repo_url, to_path=temp+"/test_repo")
                # loader = GenericLoader.from_filesystem(
                #      temp+"/test_repo",
                #      glob="**/*",
@@ -66,14 +66,14 @@ def get_vectorstore_from_text(repo_url):
                # )
                # docs = loader.load()
 
-               py_loader = create_directory_loader('.py', temp+"/test_repo")
+               # py_loader = create_directory_loader('.py', temp+"/test_repo")
                # txt_loader = create_directory_loader('.txt', temp+"/test_repo")
                # md_loader = create_directory_loader('.md', temp+"/test_repo")
 
-               py_documents = py_loader.load()
+               # py_documents = py_loader.load()
                # txt_documents = txt_loader.load()
                # md_documents = md_loader.load()
-               docs = py_documents
+               # docs = py_documents
                # root_dir = temp+"/test_repo"
                # docs = []
                # for dirpath, dirnames, filenames in os.walk(root_dir):
@@ -86,12 +86,12 @@ def get_vectorstore_from_text(repo_url):
                #                except Exception as e:
                #                     pass
 
-               print(docs)
+               print(document)
                text_splitter = RecursiveCharacterTextSplitter(
                          # language=Language.PYTHON,
                          chunk_size=1000, chunk_overlap=50
                     )
-               document_chunks = text_splitter.split_documents(docs)
+               document_chunks = text_splitter.split_documents(document)
                print(document_chunks)
                embeddings = OpenAIEmbeddings(
                     model='text-embedding-ada-002'
