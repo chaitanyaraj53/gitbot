@@ -16,6 +16,7 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_community.document_loaders.parsers.language import LanguageParser
 from langchain.text_splitter import RecursiveCharacterTextSplitter, Language
 from langchain_community.vectorstores.chroma import Chroma
+from langchain_community.vectorstores.faiss import FAISS
 from langchain_openai import OpenAIEmbeddings, ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain.chains.history_aware_retriever import create_history_aware_retriever
@@ -100,7 +101,7 @@ def get_vectorstore_from_text(repo_url):
                # vector_store.delete(ids=[x])
           # print(vector_store.delete_collection())
           if "vector_store" not in st.session_state:
-               st.session_state.vector_store = Chroma.from_documents(document_chunks, embeddings)
+               st.session_state.vector_store = FAISS.from_documents(document_chunks, embeddings)
           return st.session_state.vector_store
 
 def get_context_retriever_chain():
