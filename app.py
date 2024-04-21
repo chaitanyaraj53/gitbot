@@ -182,8 +182,8 @@ def get_response(user_input):
      
 # app config
 def main():
-     __import__('pysqlite3')
-     sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+     # __import__('pysqlite3')
+     # sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
      st.set_page_config(page_title="Chat", layout='wide')
      st.title("GitHub Bot")
      with st.sidebar:
