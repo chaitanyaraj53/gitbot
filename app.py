@@ -23,7 +23,7 @@ from langchain.chains.retrieval import create_retrieval_chain
 from langchain.chains.combine_documents.stuff import create_stuff_documents_chain
 import os
 from git import Repo
-
+import sys
 import streamlit as st
 from dotenv import load_dotenv
 from tempfile import TemporaryDirectory
@@ -182,8 +182,8 @@ def get_response(user_input):
      
 # app config
 def main():
-     # __import__('pysqlite3')
-     # sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+     __import__('pysqlite3')
+     sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
      st.set_page_config(page_title="Chat", layout='wide')
      st.title("GitHub Bot")
      with st.sidebar:
