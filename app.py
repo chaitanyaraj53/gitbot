@@ -1,12 +1,3 @@
-
-
-
-
-
-
-
-
-
 # from langchain_community.embeddings.huggingface import 
 # from langchain_community.document_loaders import TextLoader, DirectoryLoader
 from langchain_community.document_loaders import GitLoader
@@ -75,10 +66,12 @@ def get_context_retriever_chain(vector_store):
      
      prompt = ChatPromptTemplate.from_messages([
           MessagesPlaceholder(variable_name="chat_history"),
-          ("user", "{input}"),
-          ("user", '''
-                    Given the above conversation, generate a search query to look up in 
-                    order to get information relevant to the conversation.
+          ("human", "{input}"),
+          ("system", '''
+                    Given the above conversation and the latest user question,
+                    which might reference context in the chat history,
+                    generate a standalone question which can be understood without the chat history.
+                    Do NOT answer the question, just reformulate it if needed and otherwise return it as is.
                ''')
      ])
      
@@ -94,11 +87,17 @@ def get_conversational_rag_chain(retriever_chain):
      # )
      prompt = ChatPromptTemplate.from_messages([
           ("system", '''
-               Answer the user's questions based on the below context:
-               \n\n{context}
-          '''),
+                    Instructions:
+                    1. Answer based on context given below.
+                    2. Focus on repo/code.
+                    3. Consider:
+                         a. Purpose/features - describe.
+                         b. Functions/code - provide details/samples.
+                         c. Setup/usage - give instructions.
+                    Context: {context}
+               '''),
           MessagesPlaceholder(variable_name="chat_history"),
-          ("user", "{input}")
+          ("human", "{input}")
      ])
      
      stuff_documents_chain = create_stuff_documents_chain(llm, prompt)
@@ -117,8 +116,8 @@ def get_response(user_input):
 
 # app config
 def main():
-     __import__('pysqlite3')
-     sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+     # __import__('pysqlite3')
+     # sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
      st.set_page_config(page_title="Chat", layout='wide')
      st.title("GitHub Bot")
      with st.sidebar:
