@@ -45,68 +45,65 @@ def create_directory_loader(file_type, directory_path):
 
 def get_vectorstore_from_text(repo_url):
      temp = f"./{repo_url}"
-     try:
-          with TemporaryDirectory() as temp:
-               # loader = GitLoader(
-               #      clone_url=repo_url,
-               #      repo_path=temp+"/test_repo",
-               #      branch='master',
-               #      file_filter=lambda file_path: file_path.endswith('.py')
-               # )
+     with TemporaryDirectory() as temp:
+          # loader = GitLoader(
+          #      clone_url=repo_url,
+          #      repo_path=temp+"/test_repo",
+          #      branch='master',
+          #      file_filter=lambda file_path: file_path.endswith('.py')
+          # )
 
-               # document = loader.load()
+          # document = loader.load()
 
-               Repo.clone_from(repo_url, to_path=temp+"/test_repo")
-               # loader = GenericLoader.from_filesystem(
-               #      temp+"/test_repo",
-               #      glob="**/*",
-               #      suffixes=[".py", ".txt"],
-               #      exclude=["**/non-utf8-encoding.py"],
-               #      parser=LanguageParser()
-               # )
-               # docs = loader.load()
+          Repo.clone_from(repo_url, to_path=temp+"/test_repo")
+          # loader = GenericLoader.from_filesystem(
+          #      temp+"/test_repo",
+          #      glob="**/*",
+          #      suffixes=[".py", ".txt"],
+          #      exclude=["**/non-utf8-encoding.py"],
+          #      parser=LanguageParser()
+          # )
+          # docs = loader.load()
 
-               py_loader = create_directory_loader('.py', temp+"/test_repo")
-               # txt_loader = create_directory_loader('.txt', temp+"/test_repo")
-               # md_loader = create_directory_loader('.md', temp+"/test_repo")
+          py_loader = create_directory_loader('.py', temp+"/test_repo")
+          # txt_loader = create_directory_loader('.txt', temp+"/test_repo")
+          # md_loader = create_directory_loader('.md', temp+"/test_repo")
 
-               py_documents = py_loader.load()
-               # txt_documents = txt_loader.load()
-               # md_documents = md_loader.load()
-               docs = py_documents
-               # root_dir = temp+"/test_repo"
-               # docs = []
-               # for dirpath, dirnames, filenames in os.walk(root_dir):
-               #      for file in filenames:
-               #           file_extension = os.path.splitext(file)[1]
-               #           if file_extension in ['.py', '.txt']:
-               #                try:
-               #                     loader = TextLoader(os.path.join(dirpath, file), encoding='utf-8')
-               #                     docs.extend(loader.load_and_split())
-               #                except Exception as e:
-               #                     pass
+          py_documents = py_loader.load()
+          # txt_documents = txt_loader.load()
+          # md_documents = md_loader.load()
+          docs = py_documents
+          # root_dir = temp+"/test_repo"
+          # docs = []
+          # for dirpath, dirnames, filenames in os.walk(root_dir):
+          #      for file in filenames:
+          #           file_extension = os.path.splitext(file)[1]
+          #           if file_extension in ['.py', '.txt']:
+          #                try:
+          #                     loader = TextLoader(os.path.join(dirpath, file), encoding='utf-8')
+          #                     docs.extend(loader.load_and_split())
+          #                except Exception as e:
+          #                     pass
 
-               print(len(docs))
-               text_splitter = RecursiveCharacterTextSplitter(
-                         # language=Language.PYTHON,
-                         chunk_size=1000, chunk_overlap=50
-                    )
-               document_chunks = text_splitter.split_documents(docs)
-               print(document_chunks)
-               embeddings = OpenAIEmbeddings(
-                    model='text-embedding-ada-002'
+          print(len(docs))
+          text_splitter = RecursiveCharacterTextSplitter(
+                    # language=Language.PYTHON,
+                    chunk_size=1000, chunk_overlap=50
                )
-               # embeddings = huggingface.HuggingFaceEmbeddings()
-               # st.session_state.vector_store = chroma.Chroma()
-               # for x in range(len(vector_store)):
-                    # vector_store.delete(ids=[x])
-               # print(vector_store.delete_collection())
-               # if "vector_store" not in st.session_state:
-                    # st.session_state.vector_store = Chroma.from_documents(document_chunks, embeddings)
-               vector_store = Chroma.from_documents(document_chunks, embeddings)
-               return vector_store
-     except Exception as e:
-          print(e)
+          document_chunks = text_splitter.split_documents(docs)
+          print(document_chunks)
+          embeddings = OpenAIEmbeddings(
+               model='text-embedding-ada-002'
+          )
+          # embeddings = huggingface.HuggingFaceEmbeddings()
+          # st.session_state.vector_store = chroma.Chroma()
+          # for x in range(len(vector_store)):
+               # vector_store.delete(ids=[x])
+          # print(vector_store.delete_collection())
+          # if "vector_store" not in st.session_state:
+               # st.session_state.vector_store = Chroma.from_documents(document_chunks, embeddings)
+          vector_store = Chroma.from_documents(document_chunks, embeddings)
+          return vector_store
 
 def get_context_retriever_chain(vector_store):
 
