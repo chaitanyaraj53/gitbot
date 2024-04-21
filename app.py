@@ -101,13 +101,14 @@ def get_vectorstore_from_text(repo_url):
                # for x in range(len(vector_store)):
                     # vector_store.delete(ids=[x])
                # print(vector_store.delete_collection())
-               if "vector_store" not in st.session_state:
-                    st.session_state.vector_store = Chroma.from_documents(document_chunks, embeddings)
-               return st.session_state.vector_store
+               # if "vector_store" not in st.session_state:
+                    # st.session_state.vector_store = Chroma.from_documents(document_chunks, embeddings)
+               vector_store = Chroma.from_documents(document_chunks, embeddings)
+               return vector_store
      except Exception as e:
           print(e)
 
-def get_context_retriever_chain():
+def get_context_retriever_chain(vector_store):
 
      llm = ChatOpenAI(model='gpt-3.5-turbo')
      # llm = huggingface_hub.HuggingFaceHub(
@@ -115,7 +116,7 @@ def get_context_retriever_chain():
           # task='text-generation'
           # repo_id='CohereForAI/c4ai-command-r-plus'
      # )
-     retriever = st.session_state.vector_store.as_retriever()
+     retriever = vector_store.as_retriever()
      
      prompt = ChatPromptTemplate.from_messages([
           MessagesPlaceholder(variable_name="chat_history"),
@@ -156,9 +157,9 @@ def get_conversational_rag_chain(retriever_chain):
      stuff_documents_chain = create_stuff_documents_chain(llm, prompt)
      return create_retrieval_chain(retriever_chain, stuff_documents_chain)
 
-def get_response(user_input):
+def get_response(user_input, vector_store):
 
-     retriever_chain = get_context_retriever_chain()
+     retriever_chain = get_context_retriever_chain(vector_store)
      conversation_rag_chain = get_conversational_rag_chain(retriever_chain)
      response = conversation_rag_chain.invoke({
           "chat_history": st.session_state.chat_history,
@@ -202,11 +203,11 @@ def main():
                st.session_state.chat_history = [
                     AIMessage(content="Ask me about the repository..."),
                ]
-          get_vectorstore_from_text(git_url)
+          vector_store = get_vectorstore_from_text(git_url)
           # user input
           user_query = st.chat_input("Type your message here...")
           if user_query is not None and user_query != "":
-               response = get_response(user_query)
+               response = get_response(user_query, vector_store)
                # st.write(st.session_state.chat_history)
                st.session_state.chat_history.append(HumanMessage(content=user_query))
                st.session_state.chat_history.append(AIMessage(content=response['answer']))
