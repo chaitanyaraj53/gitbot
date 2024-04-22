@@ -68,12 +68,12 @@ def get_vectorstore_from_text(repo_url):
 
           py_loader = create_directory_loader('.py', temp+"/test_repo")
           txt_loader = create_directory_loader('.txt', temp+"/test_repo")
-          md_loader = create_directory_loader('.md', temp+"/test_repo")
+          # md_loader = create_directory_loader('.md', temp+"/test_repo")
 
           py_documents = py_loader.load()
           txt_documents = txt_loader.load()
-          md_documents = md_loader.load()
-          docs = py_documents + txt_documents + md_documents
+          # md_documents = md_loader.load()
+          docs = py_documents + txt_documents
           # root_dir = temp+"/test_repo"
           # docs = []
           # for dirpath, dirnames, filenames in os.walk(root_dir):
@@ -141,7 +141,7 @@ def get_conversational_rag_chain(retriever_chain):
           ("system", '''
                     Instructions:
                     1. Answer based on context given below.
-                    2. Focus on repo/code.
+                    2. Try to answer with repo/code.
                     3. Consider:
                          a. Purpose/features - describe.
                          b. Functions/code - provide details/samples.
