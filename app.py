@@ -202,7 +202,7 @@ def main():
                     AIMessage(content="Ask me about the repository..."),
                ]
           vector_store = get_vectorstore_from_text(git_url)
-          st.write(vector_store)
+          # st.write(vector_store)
 
           # user input
           user_query = st.chat_input("Type your message here...")
