@@ -115,7 +115,7 @@ def get_context_retriever_chain(vector_store):
           # repo_id='CohereForAI/c4ai-command-r-plus'
      # )
      retriever = vector_store.as_retriever(
-          search_type="mmr",
+          # search_type="mmr",
           search_kwargs={'k': 6, 'lambda_mult': 0.25}
      )
      
