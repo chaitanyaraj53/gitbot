@@ -67,13 +67,13 @@ def get_vectorstore_from_text(repo_url):
           # docs = loader.load()
 
           py_loader = create_directory_loader('.py', temp+"/test_repo")
-          # txt_loader = create_directory_loader('.txt', temp+"/test_repo")
-          # md_loader = create_directory_loader('.md', temp+"/test_repo")
+          txt_loader = create_directory_loader('.txt', temp+"/test_repo")
+          md_loader = create_directory_loader('.md', temp+"/test_repo")
 
           py_documents = py_loader.load()
-          # txt_documents = txt_loader.load()
-          # md_documents = md_loader.load()
-          docs = py_documents
+          txt_documents = txt_loader.load()
+          md_documents = md_loader.load()
+          docs = py_documents + txt_documents + md_documents
           # root_dir = temp+"/test_repo"
           # docs = []
           # for dirpath, dirnames, filenames in os.walk(root_dir):
