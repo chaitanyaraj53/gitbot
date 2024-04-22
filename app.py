@@ -141,8 +141,9 @@ def get_conversational_rag_chain(retriever_chain):
           ("system", '''
                     Instructions:
                     1. Answer based on context given below.
-                    2. Try to answer with repo/code.
-                    3. Consider:
+                    2. Answer with repo/code.
+                    3. Try to answer the question with something, don't ask the user to refere something else.
+                    4. Consider:
                          a. Purpose/features - describe.
                          b. Functions/code - provide details/samples.
                          c. Setup/usage - give instructions.
