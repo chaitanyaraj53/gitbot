@@ -145,11 +145,12 @@ def get_conversational_rag_chain(retriever_chain):
                     Instructions:
                     1. Answer based on context given below.
                     2. Answer with repo/code.
-                    3. Try to answer the question with something, don't ask the user to refere something else.
+                    3. Try to answer the question with code examples from the repository, don't ask the user to refere something else.
                     4. Consider:
                          a. Purpose/features - describe.
                          b. Functions/code - provide details/samples.
                          c. Setup/usage - give instructions.
+                    5. If you don't know, then ask for more details
                     Context: {context}
                '''),
           MessagesPlaceholder(variable_name="chat_history"),
